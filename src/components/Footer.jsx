@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { Bot, Twitter, Linkedin, Github, Mail } from "lucide-react";
 
 const Footer = () => {
@@ -15,15 +16,46 @@ const Footer = () => {
     Legal: ["Privacy", "Terms", "Security", "Compliance", "Cookie Policy"],
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   return (
     <footer className="relative border-t border-white/10 mt-20">
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-12">
-          <div className="lg:col-span-2">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <motion.div className="lg:col-span-2" variants={itemVariants}>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#A5D8FF] to-[#B197FC] flex items-center justify-center">
+              <motion.div
+                className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#A5D8FF] to-[#B197FC] flex items-center justify-center"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
                 <Bot className="w-6 h-6 text-black" />
-              </div>
+              </motion.div>
               <span className="text-xl font-display font-bold text-white">
                 RecruiterAI
               </span>
@@ -33,77 +65,74 @@ const Footer = () => {
               workflow. Hire better, faster.
             </p>
             <div className="flex gap-4">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center hover:bg-[#A5D8FF]/10 transition-colors group"
-              >
-                <Twitter className="w-5 h-5 text-gray-400 group-hover:text-[#A5D8FF]" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center hover:bg-[#A5D8FF]/10 transition-colors group"
-              >
-                <Linkedin className="w-5 h-5 text-gray-400 group-hover:text-[#A5D8FF]" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center hover:bg-[#A5D8FF]/10 transition-colors group"
-              >
-                <Github className="w-5 h-5 text-gray-400 group-hover:text-[#A5D8FF]" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center hover:bg-[#A5D8FF]/10 transition-colors group"
-              >
-                <Mail className="w-5 h-5 text-gray-400 group-hover:text-[#A5D8FF]" />
-              </a>
+              {[
+                { Icon: Twitter, href: "#" },
+                { Icon: Linkedin, href: "#" },
+                { Icon: Github, href: "#" },
+                { Icon: Mail, href: "#" },
+              ].map(({ Icon, href }, index) => (
+                <motion.a
+                  key={index}
+                  href={href}
+                  className="w-10 h-10 rounded-lg glass-effect flex items-center justify-center group"
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Icon className="w-5 h-5 text-gray-400 group-hover:text-[#A5D8FF] transition-colors" />
+                </motion.a>
+              ))}
             </div>
-          </div>
+          </motion.div>
 
           {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
+            <motion.div key={category} variants={itemVariants}>
               <h3 className="font-semibold text-white mb-4">{category}</h3>
               <ul className="space-y-3">
                 {links.map((link) => (
-                  <li key={link}>
+                  <motion.li
+                    key={link}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <a
                       href="#"
                       className="text-gray-400 hover:text-[#A5D8FF] transition-colors text-sm"
                     >
                       {link}
                     </a>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 pb-4">
+        <motion.div
+          className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 pb-4"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
           <p className="text-gray-400 text-sm">
             © 2026 RecruiterAI. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
-            <a
-              href="#"
-              className="text-gray-400 hover:text-[#A5D8FF] transition-colors"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-[#A5D8FF] transition-colors"
-            >
-              Terms of Service
-            </a>
-            <a
-              href="#"
-              className="text-gray-400 hover:text-[#A5D8FF] transition-colors"
-            >
-              Cookie Settings
-            </a>
+            {["Privacy Policy", "Terms of Service", "Cookie Settings"].map(
+              (link, index) => (
+                <motion.a
+                  key={link}
+                  href="#"
+                  className="text-gray-400 hover:text-[#A5D8FF] transition-colors"
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {link}
+                </motion.a>
+              )
+            )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );
