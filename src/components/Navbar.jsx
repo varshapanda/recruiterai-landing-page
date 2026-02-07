@@ -20,8 +20,7 @@ const Navbar = () => {
         "cta",
       ];
 
-      // Find which section is currently in view
-      const scrollPosition = window.scrollY + 100; // Offset for navbar height
+      const scrollPosition = window.scrollY + 100;
 
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
@@ -75,7 +74,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-black/80 backdrop-blur-md">
       <div className="max-w-[1400px] mx-auto px-6 py-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -125,13 +124,13 @@ const Navbar = () => {
         </div>
 
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-4">
+          <div className="md:hidden mt-4 pb-4 space-y-4 bg-black/95 backdrop-blur-xl rounded-2xl p-6 border-2 border-[#B197FC]/30 shadow-lg shadow-[#B197FC]/20">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className={`block transition-colors duration-200 font-medium ${
+                className={`block text-base transition-colors duration-200 font-medium py-2 ${
                   isLinkActive(link.href)
                     ? "text-[#A5D8FF] font-bold"
                     : "text-gray-300 hover:text-[#A5D8FF]"
@@ -140,11 +139,8 @@ const Navbar = () => {
                 {link.name}
               </a>
             ))}
-            <div className="pt-4 space-y-2">
-              <button className="w-full text-gray-300 hover:text-white transition-colors font-medium py-2">
-                Sign In
-              </button>
-              <button className="w-full px-6 py-2 bg-gradient-to-r from-[#A5D8FF] to-[#D0BCFF] text-black font-semibold rounded-lg">
+            <div className="pt-4 border-t border-white/10">
+              <button className="w-full px-6 py-3 bg-gradient-to-r from-[#A5D8FF] to-[#D0BCFF] text-black font-semibold rounded-lg">
                 Get Started
               </button>
             </div>
