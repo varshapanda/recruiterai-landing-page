@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import {
   FileSearch,
   Calendar,
@@ -297,40 +298,72 @@ const Workflows = () => {
     },
   ];
 
-  const FlowNode = ({ node }) => {
+  const FlowNode = ({ node, index }) => {
     const Icon = node.icon;
+
+    const nodeVariants = {
+      hidden: { opacity: 0, scale: 0.8, y: 20 },
+      visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+          duration: 0.4,
+          delay: index * 0.1,
+          ease: "easeOut",
+        },
+      },
+    };
 
     if (node.type === "decision" || node.type === "decision-small") {
       return (
-        <div className="flex flex-col items-center mx-auto">
-          <div className="relative w-28 h-28 flex items-center justify-center">
+        <motion.div
+          className="flex flex-col items-center mx-auto"
+          variants={nodeVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          <motion.div
+            className="relative w-28 h-28 flex items-center justify-center"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ duration: 0.2 }}
+          >
             <div className="absolute w-20 h-20 rotate-45 bg-gradient-to-br from-[#A5D8FF]/20 to-[#D0BCFF]/20 border-2 border-[#A5D8FF] rounded-lg"></div>
             <div className="relative z-10 -rotate-0 text-center px-3">
               <p className="text-[10px] font-semibold text-white leading-tight">
                 {node.label}
               </p>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       );
     }
 
     return (
-      <div
-        className={`relative rounded-xl p-3 min-w-[160px] max-w-[180px] transition-all duration-300 hover:scale-105 shadow-lg border-2 ${node.type === "end" ? "ml-0" : "mx-auto"}`}
+      <motion.div
+        className={`relative rounded-xl p-3 min-w-[160px] max-w-[180px] shadow-lg border-2 ${node.type === "end" ? "ml-0" : "mx-auto"}`}
         style={{
           backgroundColor: `${node.color}20`,
           borderColor: node.color,
         }}
+        variants={nodeVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        whileHover={{ scale: 1.05, y: -5 }}
+        transition={{ duration: 0.2 }}
       >
         <div className="flex items-start gap-2">
           {Icon && (
-            <div
+            <motion.div
               className="rounded-lg p-2 flex-shrink-0"
               style={{ backgroundColor: node.color }}
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.5 }}
             >
               <Icon className="w-4 h-4 text-black" />
-            </div>
+            </motion.div>
           )}
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-white text-xs leading-tight mb-1">
@@ -343,11 +376,11 @@ const Workflows = () => {
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
     );
   };
 
-  const renderBranches = (branches) => {
+  const renderBranches = (branches, baseIndex = 0) => {
     if (!branches || branches.length === 0) return null;
 
     return (
@@ -357,38 +390,46 @@ const Workflows = () => {
             key={branchIdx}
             className="flex flex-col items-center flex-1 max-w-[180px]"
           >
-            {/* Branch Label */}
-            <div
+            <motion.div
               className="text-[10px] font-bold mb-2 px-2 py-0.5 rounded-full bg-white/10"
               style={{ color: branchIdx === 0 ? "#A5D8FF" : "#B197FC" }}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: baseIndex * 0.1 + 0.2 }}
             >
               {branch.label}
-            </div>
+            </motion.div>
 
-            {/* Branch Connector Line */}
-            <div
+            <motion.div
               className="w-0.5 h-3 mb-2"
               style={{
                 backgroundColor: branchIdx === 0 ? "#A5D8FF" : "#B197FC",
               }}
-            ></div>
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: baseIndex * 0.1 + 0.3 }}
+            />
 
-            {/* Branch Nodes */}
             <div className="flex flex-col gap-3 items-start w-full">
               {branch.nodes.map((node, nodeIdx) => (
                 <React.Fragment key={node.id}>
-                  <FlowNode node={node} />
+                  <FlowNode node={node} index={baseIndex + nodeIdx} />
 
-                  {/* Connector between nodes in branch */}
                   {nodeIdx < branch.nodes.length - 1 && (
-                    <div
+                    <motion.div
                       className="w-0.5 h-4 mx-auto"
                       style={{ backgroundColor: node.color }}
-                    ></div>
+                      initial={{ scaleY: 0 }}
+                      whileInView={{ scaleY: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: (baseIndex + nodeIdx) * 0.1 + 0.4 }}
+                    />
                   )}
 
-                  {/* Handle nested decision nodes */}
-                  {node.branches && renderBranches(node.branches)}
+                  {node.branches &&
+                    renderBranches(node.branches, baseIndex + nodeIdx + 1)}
                 </React.Fragment>
               ))}
             </div>
@@ -403,32 +444,60 @@ const Workflows = () => {
       <div className="flex flex-col items-center gap-3">
         {nodes.map((node, idx) => (
           <React.Fragment key={node.id}>
-            <FlowNode node={node} />
+            <FlowNode node={node} index={idx} />
 
-            {/* Connector Line */}
             {idx < nodes.length - 1 && !node.branches && (
-              <div
+              <motion.div
                 className="w-0.5 h-4"
                 style={{ backgroundColor: node.color }}
-              ></div>
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 + 0.4 }}
+              />
             )}
 
-            {/* Handle Decision Branches */}
-            {node.branches && renderBranches(node.branches)}
+            {node.branches && renderBranches(node.branches, idx + 1)}
           </React.Fragment>
         ))}
       </div>
     );
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
     <section id="how-it-works" className="py-20 px-6 relative overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-dark-primaryBg via-[#404040]/30 to-dark-primaryBg"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
             AI Recruiting Software That Works{" "}
             <span className="text-gradient">Like Your Own HR Team</span>
@@ -436,19 +505,33 @@ const Workflows = () => {
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Build custom hiring workflows in minutes. No coding required.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 3 Column Flowcharts - Side by Side on Desktop, Stacked on Mobile */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <motion.div
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
           {flowcharts.map((flow, flowIndex) => {
             const FlowIcon = flow.icon;
             return (
-              <div key={flowIndex} className="glass-effect rounded-3xl p-6">
-                {/* Flowchart Header */}
+              <motion.div
+                key={flowIndex}
+                className="glass-effect rounded-3xl p-6"
+                variants={cardVariants}
+                whileHover={{ y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
                 <div className="flex flex-col items-center text-center mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#A5D8FF] to-[#B197FC] flex items-center justify-center mb-2">
+                  <motion.div
+                    className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#A5D8FF] to-[#B197FC] flex items-center justify-center mb-2"
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.5 }}
+                  >
                     <FlowIcon className="w-5 h-5 text-black" />
-                  </div>
+                  </motion.div>
                   <h3 className="text-base font-bold text-white mb-2 leading-tight">
                     {flow.title}
                   </h3>
@@ -458,12 +541,11 @@ const Workflows = () => {
                   </p>
                 </div>
 
-                {/* Vertical Flow Visualization */}
                 <div className="pb-4">{renderFlowchart(flow.nodes)}</div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
