@@ -64,7 +64,7 @@ const Integrations = () => {
   return (
     <section
       id="integrations"
-      className="pt-12 pb-12 px-6 relative overflow-hidden bg-gradient-to-b from-dark-primaryBg to-[#404040]/50"
+      className="py-16 px-6 relative overflow-hidden bg-gradient-to-b from-dark-primaryBg to-[#404040]/50"
     >
       <div className="max-w-7xl mx-auto">
         <motion.div

@@ -57,7 +57,7 @@ const FAQ = () => {
   };
 
   return (
-    <section id="faq" className="py-20 px-6 relative overflow-hidden">
+    <section id="faq" className="py-16 px-6 relative overflow-hidden">
       <div className="max-w-4xl mx-auto">
         <motion.div
           className="text-center mb-16"

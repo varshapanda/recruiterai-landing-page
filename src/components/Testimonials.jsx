@@ -58,7 +58,7 @@ const Testimonials = () => {
   };
 
   return (
-    <section id="testimonials" className="py-20 px-6 relative overflow-hidden">
+    <section id="testimonials" className="py-16 px-6 relative overflow-hidden">
       <div className="absolute inset-0">
         <motion.div
           className="absolute top-0 left-1/4 w-96 h-96 bg-[#D0BCFF]/5 rounded-full blur-3xl"

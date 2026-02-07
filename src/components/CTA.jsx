@@ -3,7 +3,7 @@ import { Rocket, Calendar, ArrowRight } from "lucide-react";
 
 const CTA = () => {
   return (
-    <section id="cta" className="py-20 px-6 relative overflow-hidden">
+    <section id="cta" className="py-16 px-6 relative overflow-hidden">
       <div className="absolute inset-0">
         <motion.div
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-[#A5D8FF]/20 via-[#D0BCFF]/20 to-[#B197FC]/20 rounded-full blur-3xl"
