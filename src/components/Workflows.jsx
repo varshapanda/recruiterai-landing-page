@@ -487,7 +487,7 @@ const Workflows = () => {
   };
 
   return (
-    <section id="how-it-works" className="py-20 px-6 relative overflow-hidden">
+    <section id="how-it-works" className="py-16 px-6 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-dark-primaryBg via-[#404040]/30 to-dark-primaryBg"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
