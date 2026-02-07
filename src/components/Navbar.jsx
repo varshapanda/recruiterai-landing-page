@@ -4,11 +4,41 @@ import { Menu, X, Bot } from "lucide-react";
 const Navbar = () => {
   const [, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+
+      const sections = [
+        "hero",
+        "how-it-works",
+        "impact",
+        "integrations",
+        "testimonials",
+        "faq",
+        "cta",
+      ];
+
+      // Find which section is currently in view
+      const scrollPosition = window.scrollY + 100; // Offset for navbar height
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(sectionId);
+            break;
+          }
+        }
+      }
     };
+
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -39,6 +69,11 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const isLinkActive = (href) => {
+    const sectionId = href.replace("#", "");
+    return activeSection === sectionId;
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
       <div className="max-w-[1400px] mx-auto px-6 py-5">
@@ -59,7 +94,11 @@ const Navbar = () => {
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors duration-200 font-medium rounded-full hover:bg-white/10 whitespace-nowrap"
+                  className={`px-4 py-2 text-sm transition-all duration-200 font-medium rounded-full whitespace-nowrap ${
+                    isLinkActive(link.href)
+                      ? "bg-gradient-to-r from-[#A5D8FF]/20 to-[#B197FC]/20 text-white border border-[#A5D8FF]/30"
+                      : "text-gray-300 hover:text-white hover:bg-white/10"
+                  }`}
                 >
                   {link.name}
                 </a>
@@ -92,7 +131,11 @@ const Navbar = () => {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="block text-gray-300 hover:text-[#A5D8FF] transition-colors duration-200 font-medium"
+                className={`block transition-colors duration-200 font-medium ${
+                  isLinkActive(link.href)
+                    ? "text-[#A5D8FF] font-bold"
+                    : "text-gray-300 hover:text-[#A5D8FF]"
+                }`}
               >
                 {link.name}
               </a>
